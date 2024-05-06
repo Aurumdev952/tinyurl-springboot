@@ -1,10 +1,7 @@
 package com.tinyurl.tinyurl.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,7 +9,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "urls", indexes = {@Index(name = "idx_url_id", columnList = "url_id", unique = true)})
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

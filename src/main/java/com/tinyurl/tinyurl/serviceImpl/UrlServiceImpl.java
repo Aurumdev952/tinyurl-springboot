@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
@@ -69,10 +72,12 @@ public class UrlServiceImpl implements UrlService {
 
 
     private boolean isValidURL(String url) {
-        String regex = "^(https?|ftp)://(www\\.)?([\\w.-]+)+(:\\d+)?(/([\\w/_.]*)?)?$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(url);
-        return matcher.matches();
+        try {
+            new URL(url).toURI();
+            return true;
+        } catch (MalformedURLException | URISyntaxException e) {
+            return false;
+        }
     }
 
     private long generateRandomNumber(long min, long max) {

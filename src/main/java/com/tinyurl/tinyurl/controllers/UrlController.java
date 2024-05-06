@@ -6,10 +6,15 @@ import com.tinyurl.tinyurl.models.Url;
 import com.tinyurl.tinyurl.services.UrlService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -33,8 +38,10 @@ public class UrlController {
     }
 
     @GetMapping("/{urlId}")
-    public void redirectUrl(HttpServletResponse response, @PathVariable("urlId") String urlId) throws CustomRequestException, IOException {
+    public ResponseEntity<?> redirectUrl(@PathVariable("urlId") String urlId) throws CustomRequestException, IOException {
         Url url = urlService.get(urlId);
-        response.sendRedirect(url.getOriginalUrl());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(url.getOriginalUrl()));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }

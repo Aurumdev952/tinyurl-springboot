@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  # PostgreSQL database service
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: tinydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: fidele95
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis service
+  redis:
+    image: redis:latest
+
+  # Nginx reverse proxy service
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
+  # Your Java Spring Boot project service
+  tinyurl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  postgres_data:
